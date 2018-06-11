@@ -1,6 +1,7 @@
 package com.example.admin.myapplication;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.admin.myapplication.model.Drink;
@@ -20,12 +22,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button button;
-    List<Drink> drinks;
-    //ссылка на адаптер, класс который знает всё о модели и дёргает методы холдера
-    private PersonAdapter mAdapter;
-    //ссылка на вьюшку из представления
-    private RecyclerView mRecyclerView;
+    private List<Drink> drinks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +36,23 @@ public class MainActivity extends AppCompatActivity {
         drinks.add(vino);
         drinks.add(vodka);
         //Находим ссылку на контейнер - виджет
-        mRecyclerView = (RecyclerView) findViewById(R.id.list);
+        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.list);
         //LinearLayoutManager занимается размещением объектов на экране и прокруткой
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //Подготавливаем армию клонов
         //Создаём экземпляр адаптера и передаём ему под командование наших клонов. Далее руководит ими он
-        mAdapter = new PersonAdapter(drinks);
+        PersonAdapter mAdapter = new PersonAdapter(drinks);
         //Назначаем вьюхе адаптером наш экземпляр PersonAdapter
         mRecyclerView.setAdapter(mAdapter);
-        button = findViewById(R.id.button);
+        Button button = findViewById(R.id.button);
+        ImageView imageView = findViewById(R.id.imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AddDrinkActivity.class);
+                startActivity(intent);
+            }
+        });
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
