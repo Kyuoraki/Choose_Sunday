@@ -1,12 +1,17 @@
 package com.example.admin.myapplication.model;
 
-public class Drink {
+import io.realm.RealmObject;
+
+public class Drink extends RealmObject {
     private String name;
     private double price;
 
     public Drink(String name, double price) {
         this.name = name;
         this.price = price;
+    }
+
+    public Drink() {
     }
 
     public String getName() {

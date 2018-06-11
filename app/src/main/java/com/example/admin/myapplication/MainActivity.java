@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.admin.myapplication.model.Drink;
+import com.example.admin.myapplication.model.dataBase.DrinksDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,25 +24,24 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private List<Drink> drinks;
+    private DrinksDAO drinksDAO;
+    private PersonAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Drink whiskey = new Drink("Jim_beam", 1000);
-        Drink vodka = new Drink("kreskova", 350);
-        Drink vino = new Drink("vino", 250);
-        drinks = new ArrayList<>();
-        drinks.add(whiskey);
-        drinks.add(vino);
-        drinks.add(vodka);
+        drinksDAO = new DrinksDAO(this);
+        drinks = drinksDAO.getAllDrinks();
         //Находим ссылку на контейнер - виджет
-        RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.list);
         //LinearLayoutManager занимается размещением объектов на экране и прокруткой
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         //Подготавливаем армию клонов
         //Создаём экземпляр адаптера и передаём ему под командование наших клонов. Далее руководит ими он
-        PersonAdapter mAdapter = new PersonAdapter(drinks);
+        mAdapter = new PersonAdapter(drinks);
         //Назначаем вьюхе адаптером наш экземпляр PersonAdapter
         mRecyclerView.setAdapter(mAdapter);
         Button button = findViewById(R.id.button);
@@ -74,11 +74,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        drinksDAO.close();
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        drinksDAO = new DrinksDAO(this);
+        drinks = drinksDAO.getAllDrinks();
+        mAdapter = new PersonAdapter(drinks);
+        //Назначаем вьюхе адаптером наш экземпляр PersonAdapter
+        mRecyclerView.setAdapter(mAdapter);    }
+
 
     /*Класс PersonHolder занят тем, что держит на готове ссылки на элементы виджетов,
- которые он с радостью наполнит данными из объекта модели в методе bindCrimе.
- Этот класс используется только адаптером в коде ниже, адаптер дёргает его и поручает
- грязную работу по заполнению виджетов*/
+     которые он с радостью наполнит данными из объекта модели в методе bindCrimе.
+     Этот класс используется только адаптером в коде ниже, адаптер дёргает его и поручает
+     грязную работу по заполнению виджетов*/
     private class PersonHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
@@ -93,11 +111,13 @@ public class MainActivity extends AppCompatActivity {
             textView.setText(drink.getName());
         }
     }
+
     //Наш адаптер, мост между фабрикой клонов и выводом их на экран.
     //Его методы будет дёргать LinearLayoutManager, назныченный вьюшке
     //RecyclerView в методе onCreate нашей активити
     private class PersonAdapter extends RecyclerView.Adapter<PersonHolder> {
         private List<Drink> drinks;
+
         public PersonAdapter(List<Drink> drinks) {
             this.drinks = drinks;
         }
