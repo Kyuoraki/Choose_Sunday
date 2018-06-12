@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.example.admin.myapplication.model.Drink;
 import com.example.admin.myapplication.model.dataBase.DrinksDAO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -99,16 +98,19 @@ public class MainActivity extends AppCompatActivity {
      грязную работу по заполнению виджетов*/
     private class PersonHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        private TextView textViewNameItem;
+        private TextView textViewPriceItem;
 
         public PersonHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.textView);
+            textViewNameItem = (TextView) itemView.findViewById(R.id.textViewNameItem);
+            textViewPriceItem = (TextView) itemView.findViewById(R.id.textViewPriceItem);
         }
 
         //Метод, связывающий ранее добытые в конструкторе ссылки с данными модели
         public void bindCrime(Drink drink) {
-            textView.setText(drink.getName());
+            textViewNameItem.setText(drink.getName());
+            textViewPriceItem.setText(String.valueOf(drink.getPrice()));
         }
     }
 
