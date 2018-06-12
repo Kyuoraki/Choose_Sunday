@@ -1,8 +1,10 @@
 package com.example.admin.myapplication.model;
 
+import java.io.Serializable;
+
 import io.realm.RealmObject;
 
-public class Drink extends RealmObject {
+public class Drink extends RealmObject implements Serializable{
     private String name;
     private double price;
 

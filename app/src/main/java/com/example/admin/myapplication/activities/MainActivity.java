@@ -1,4 +1,4 @@
-package com.example.admin.myapplication;
+package com.example.admin.myapplication.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.admin.myapplication.R;
 import com.example.admin.myapplication.model.Drink;
 import com.example.admin.myapplication.model.dataBase.DrinksDAO;
 
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
      которые он с радостью наполнит данными из объекта модели в методе bindCrimе.
      Этот класс используется только адаптером в коде ниже, адаптер дёргает его и поручает
      грязную работу по заполнению виджетов*/
-    private class PersonHolder extends RecyclerView.ViewHolder {
+    private class PersonHolder extends RecyclerView.ViewHolder  {
 
         private TextView textViewNameItem;
         private TextView textViewPriceItem;
@@ -107,11 +108,14 @@ public class MainActivity extends AppCompatActivity {
             textViewPriceItem = (TextView) itemView.findViewById(R.id.textViewPriceItem);
         }
 
+
         //Метод, связывающий ранее добытые в конструкторе ссылки с данными модели
         public void bindCrime(Drink drink) {
             textViewNameItem.setText(drink.getName());
             textViewPriceItem.setText(String.valueOf(drink.getPrice()));
         }
+
+
     }
 
     //Наш адаптер, мост между фабрикой клонов и выводом их на экран.
@@ -137,8 +141,17 @@ public class MainActivity extends AppCompatActivity {
         //Дёргает метод холдера при выводе нового элемента списка на экран,
         //передавая ему актуальный объект модели для разбора и представления
         @Override
-        public void onBindViewHolder(PersonHolder holder, int position) {
+        public void onBindViewHolder(PersonHolder holder, final int position) {
             holder.bindCrime(drinks.get(position));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, DrinkDetailActvity.class);
+                    intent.putExtra("name", drinks.get(position).getName() );
+                    intent.putExtra("price", String.valueOf(drinks.get(position).getPrice()));
+                    startActivity(intent);
+                }
+            });
 
         }
 

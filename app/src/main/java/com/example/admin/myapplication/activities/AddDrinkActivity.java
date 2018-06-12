@@ -1,11 +1,13 @@
-package com.example.admin.myapplication;
+package com.example.admin.myapplication.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.admin.myapplication.R;
 import com.example.admin.myapplication.model.dataBase.DrinksDAO;
 
 public class AddDrinkActivity extends AppCompatActivity {
@@ -22,7 +24,10 @@ public class AddDrinkActivity extends AppCompatActivity {
         buttonSaveDrink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drinksDAO.save(editTextNameDrink.getText().toString(),Integer.parseInt(editTextPriceDrink.getText().toString()));
+                if (editTextNameDrink.getText().toString().equals("")&& editTextPriceDrink.getText().toString().equals("")){
+                    Toast.makeText(getApplicationContext(),
+                            "Пусто.", Toast.LENGTH_SHORT).show();
+                } else drinksDAO.save(editTextNameDrink.getText().toString(),Integer.parseInt(editTextPriceDrink.getText().toString()));
             }
         });
     }
